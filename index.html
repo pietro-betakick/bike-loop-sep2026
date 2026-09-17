@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bike loop · Bromont–Granby · Sep 21–23, 2026</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<style>
+  :root { --ink:#1a1a1a; --muted:#5c5c5c; --line:#e6e6e6; --bg:#fafaf8; --card:#fff; --accent:#0b6e4f; --ok-bg:#e8f5ef; --d1:#0b6e4f; --d2:#1d4ed8; --d3:#b45309; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:"Segoe UI",system-ui,-apple-system,sans-serif; color:var(--ink); background:var(--bg); line-height:1.5; }
+  .wrap { max-width:860px; margin:0 auto; padding:2rem 1.25rem 4rem; }
+  h1 { font-size:1.7rem; margin:0 0 .35rem; letter-spacing:-.02em; }
+  .sub { color:var(--muted); margin:0 0 1.4rem; }
+  .meta { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:.75rem; margin-bottom:1.5rem; }
+  .chip { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:.75rem .9rem; }
+  .chip strong { display:block; font-size:.72rem; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); }
+  h2 { font-size:1.12rem; margin:2rem 0 .7rem; border-bottom:1px solid var(--line); padding-bottom:.35rem; }
+  h3 { font-size:1rem; margin:1.2rem 0 .4rem; }
+  p { margin:.45rem 0; }
+  .callout { border-radius:10px; padding:.85rem 1rem; margin:1rem 0; border:1px solid #b7e0cb; background:var(--ok-bg); }
+  table { width:100%; border-collapse:collapse; background:var(--card); border:1px solid var(--line); border-radius:10px; overflow:hidden; font-size:.93rem; margin:.5rem 0 1rem; }
+  th,td { padding:.65rem .75rem; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+  th { background:#f3f3f0; font-size:.72rem; text-transform:uppercase; letter-spacing:.03em; color:var(--muted); }
+  tr:last-child td { border-bottom:none; }
+  ul { margin:.35rem 0 .8rem; padding-left:1.15rem; }
+  li { margin:.22rem 0; }
+  a { color:var(--accent); }
+  .hotel { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:1rem 1.05rem; margin:.7rem 0; }
+  .hotel.pick { border-color:#7bc9a5; box-shadow:0 0 0 1px #7bc9a5 inset; }
+  .badge { display:inline-block; font-size:.7rem; font-weight:600; text-transform:uppercase; letter-spacing:.04em; padding:.12rem .4rem; border-radius:999px; background:var(--ok-bg); color:var(--accent); margin-left:.3rem; }
+  .muted { color:var(--muted); font-size:.9rem; }
+  .day { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:1rem 1.05rem; margin:.85rem 0; }
+  .km { font-variant-numeric:tabular-nums; }
+  #map { height:420px; width:100%; border-radius:12px; border:1px solid var(--line); margin:.75rem 0 0.5rem; z-index:1; }
+  .legend { display:flex; flex-wrap:wrap; gap:.75rem 1.25rem; font-size:.9rem; margin:.4rem 0 1rem; }
+  .legend span { display:inline-flex; align-items:center; gap:.4rem; }
+  .swatch { width:18px; height:4px; border-radius:2px; display:inline-block; }
+  .swatch.d1 { background:var(--d1); }
+  .swatch.d2 { background:var(--d2); }
+  .swatch.d3 { background:var(--d3); }
+  footer { margin-top:2.2rem; padding-top:1rem; border-top:1px solid var(--line); color:var(--muted); font-size:.85rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Bike loop · Bromont then Granby</h1>
+    <p class="sub">Mon Sep 21 – Wed Sep 23, 2026 · 2 riders · REM Édouard-Montpetit ↔ Brossard · non-electric bikes</p>
+  </header>
+
+  <div class="meta">
+    <div class="chip"><strong>Night 1</strong>Bromont (Mon 21)</div>
+    <div class="chip"><strong>Night 2</strong>Granby (Tue 22)</div>
+    <div class="chip"><strong>Day 3</strong>Back to Brossard REM</div>
+    <div class="chip"><strong>Pace</strong>~20 km/h flat path · under ~6 h/day</div>
+  </div>
+
+  <div class="callout">
+    REM out-and-back on dedicated paths (Montée Chambly, Canal de Chambly, Montérégiade, Estriade, Villageoise). In Farnham follow the Magenta / Antonio-Bernier bike detour. Map below is a planning sketch of the towns and overnight stops, not a turn-by-turn GPS track — load the Bikemap / Route Verte links for navigation.
+  </div>
+
+  <h2>Itinerary map</h2>
+  <div id="map" role="img" aria-label="Map of the three-day bike loop from Brossard to Bromont, Granby, and back"></div>
+  <div class="legend">
+    <span><i class="swatch d1"></i> Day 1 · to Bromont</span>
+    <span><i class="swatch d2"></i> Day 2 · scenic to Granby</span>
+    <span><i class="swatch d3"></i> Day 3 · home to Brossard</span>
+  </div>
+  <p class="muted">Markers: REM stations, overnight towns, and main path towns. Lines are simplified corridors for planning.</p>
+
+  <h2>Distance summary</h2>
+  <table>
+    <thead>
+      <tr><th>Day</th><th>Plan</th><th class="km">Distance</th><th>On the bike</th><th>Sleep</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Mon 21</strong></td>
+        <td>Brossard → Bromont via canal + Montérégiade + Villageoise</td>
+        <td class="km"><strong>~80–90 km</strong><br><span class="muted">~150–250 m climb</span></td>
+        <td>~4–4.5 h moving<br>~5–6 h with stops</td>
+        <td>Bromont</td>
+      </tr>
+      <tr>
+        <td><strong>Tue 22</strong></td>
+        <td>Bromont → Waterloo (Estriade) → short Montagnarde taste → Granby</td>
+        <td class="km"><strong>~55–65 km</strong><br><span class="muted">~250–350 m</span></td>
+        <td>~3–4 h moving<br>~4–5 h with stops</td>
+        <td>Granby</td>
+      </tr>
+      <tr>
+        <td><strong>Wed 23</strong></td>
+        <td>Granby → Brossard REM (reverse of Day 1 spine)</td>
+        <td class="km"><strong>~85–90 km</strong><br><span class="muted">mostly flat</span></td>
+        <td>~4–4.5 h moving<br>~5–6 h with stops</td>
+        <td>Home</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="muted">Day 1/3 from published corridor tracks (Bikemap Bromont↔Longueuil ~83 km; Brossard↔Granby ~89 km) plus Villageoise into Bromont. Day 2 from Estriade + a short Eastman turnaround without full Magog.</p>
+
+  <h2>Day 1 · Mon Sep 21 · to Bromont</h2>
+  <div class="day">
+    <p><strong>Morning:</strong> REM from Édouard-Montpetit toward Brossard (~20–25 min). Non-electric bikes OK all hours through Sep 27.</p>
+    <table>
+      <thead><tr><th>Segment</th><th>Km</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>REM Brossard → Chambly</td><td class="km">~15–25</td><td>Montée / Riveraine. Normandie detour if La Marina passerelle is closed.</td></tr>
+        <tr><td>Chambly Canal → Saint-Jean</td><td class="km">~20</td><td>Flat. Bridge 4 closed: use Bridge 7 / Chemin du Canal.</td></tr>
+        <tr><td>Saint-Jean → Farnham → Granby junction</td><td class="km">~48</td><td>Montérégiade. Farnham Magenta detour; Antonio-Bernier if needed.</td></tr>
+        <tr><td>Estriade / Villageoise → Bromont</td><td class="km">~13–17</td><td>Asphalt into town.</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Stops:</strong> Chambly (coffee / Fort), Saint-Jean (snack), Farnham lunch (Yamaska Café or Fromagerie area), Bromont tourist office (15 boul. de Bromont) on arrival.</p>
+  </div>
+
+  <h2>Day 2 · Tue Sep 22 · Bromont → Granby</h2>
+  <div class="day">
+    <p>Shorter scenic day on Estriade. Optional short Montagnarde toward Eastman; turn before Magog.</p>
+    <table>
+      <thead><tr><th>Segment</th><th>Km</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Bromont → Estriade (Villageoise)</td><td class="km">~3–6</td><td>Connector.</td></tr>
+        <tr><td>Toward Waterloo on Estriade</td><td class="km">~15–21</td><td>Asphalt. Relais des Cheminots (Shefford) for snacks / toilets.</td></tr>
+        <tr><td>Optional Eastman turnaround</td><td class="km">~10–20 RT</td><td>Rolling; some gravel.</td></tr>
+        <tr><td>Estriade into Granby</td><td class="km">~15–21</td><td>Finish near Lac Boivin / Café de la Brûlerie.</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Stops:</strong> Relais des Cheminots, Waterloo café if you go that far, Café de la Brûlerie in Granby.</p>
+  </div>
+
+  <h2>Day 3 · Wed Sep 23 · Granby → Brossard REM</h2>
+  <div class="day">
+    <p>Reverse Montérégiade + canal. Same Farnham Magenta detour. REM home anytime afternoon/evening.</p>
+    <table>
+      <thead><tr><th>Segment</th><th>Km</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Granby → Farnham → Saint-Jean</td><td class="km">~48</td><td>Montérégiade + Magenta detour.</td></tr>
+        <tr><td>Saint-Jean → Chambly</td><td class="km">~20</td><td>Canal.</td></tr>
+        <tr><td>Chambly → Brossard REM</td><td class="km">~15–25</td><td>Montée / Riveraine.</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Stops:</strong> Farnham coffee if needed; Chambly late lunch before the final push.</p>
+  </div>
+
+  <h2>Hotels</h2>
+  <p>1 room, 2 adults, <strong>two separate beds</strong>. Quotes from Sep 16–17 live checks — refresh before booking.</p>
+
+  <h3>Night 1 · Bromont · Mon Sep 21</h3>
+  <div class="hotel pick">
+    <strong>Hotel Bromont</strong><span class="badge">Live quote</span>
+    <p>125 boul. de Bromont · <a href="https://hotelbromont.com/">hotelbromont.com</a></p>
+    <ul>
+      <li><strong>Standard Queen · 2 queen beds</strong> · CA$179 / night before tax, breakfast included (checked Sep 16–17).</li>
+      <li>Normal hotel, private bath, pool. Ask for bike storage.</li>
+    </ul>
+  </div>
+  <div class="hotel pick">
+    <strong>CNCB Auberge sportive</strong><span class="badge">True single beds</span>
+    <p>400 rue Shefford · <a href="https://centrenationalbromont.com/en/sports-hostel/">centrenationalbromont.com</a> · 450-534-3333</p>
+    <ul>
+      <li>Private room · <strong>2 single bunks</strong> · from ~CA$90 + tax. Confirm Sep 21 by phone / ActivityMessenger.</li>
+      <li>Best match for single beds. Bike storage. Shared kitchen / showers.</li>
+    </ul>
+  </div>
+
+  <h3>Night 2 · Granby · Tue Sep 22</h3>
+  <div class="hotel pick">
+    <strong>St Christophe Hotel &amp; Spa</strong><span class="badge">Live quote</span>
+    <p>255 Denison Est · on Estriade / Lac Boivin</p>
+    <ul>
+      <li><strong>2 queen beds</strong> · CA$194 / night (checked Sep 16). Free cancel until Sep 21. Secure bike shed.</li>
+    </ul>
+  </div>
+  <div class="hotel">
+    <strong>Hôtel Castel</strong>
+    <p>901 rue Principale · <a href="https://www.hotelcastel.ca/en/rooms/">hotelcastel.ca</a></p>
+    <ul>
+      <li>2 queen beds, cyclist-friendly. Confirm live rate for Sep 22 (often ~CA$130–200).</li>
+    </ul>
+  </div>
+
+  <h2>Navigation links</h2>
+  <ul>
+    <li>Bromont ↔ Longueuil corridor: <a href="https://www.bikemap.net/fr/r/18993474/">Bikemap 83.2 km</a></li>
+    <li>Brossard ↔ Granby: <a href="https://www.bikemap.net/en/r/18332490/">Bikemap 89.1 km</a></li>
+    <li>Day 2 template (trim Magog): <a href="https://www.bikemap.net/fr/r/17051230/">64.7 km</a></li>
+    <li><a href="https://www.lequebecavelo.ca/carte-de-la-route-verte">Route Verte map</a> · <a href="https://www.reseauveloyamaska.ca/carte-interactive">Yamaska map</a></li>
+  </ul>
+
+  <footer>
+    Planning sketch map + published path distances · hotel quotes Sep 16–17, 2026 · nothing booked
+  </footer>
+</div>
+<script>
+(function () {
+  const edouard = [45.5103, -73.6128];
+  const brossard = [45.4515, -73.4335];
+  const chambly = [45.4475, -73.2870];
+  const stJean = [45.3065, -73.2540];
+  const farnham = [45.2855, -72.9745];
+  const granby = [45.4002, -72.7325];
+  const bromont = [45.3185, -72.6490];
+  const shefford = [45.3580, -72.5800];
+  const waterloo = [45.3445, -72.5165];
+  const eastman = [45.3000, -72.4200];
+
+  const map = L.map('map', { scrollWheelZoom: false });
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 16,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map);
+
+  const day1 = [brossard, chambly, stJean, farnham, granby, bromont];
+  const day2 = [bromont, shefford, waterloo, eastman, waterloo, granby];
+  const day3 = [granby, farnham, stJean, chambly, brossard];
+
+  L.polyline(day1, { color: '#0b6e4f', weight: 4, opacity: 0.9 }).addTo(map);
+  L.polyline(day2, { color: '#1d4ed8', weight: 4, opacity: 0.85, dashArray: '8 6' }).addTo(map);
+  L.polyline(day3, { color: '#b45309', weight: 4, opacity: 0.75 }).addTo(map);
+
+  function pin(latlng, title, note) {
+    L.circleMarker(latlng, { radius: 6, color: '#1a1a1a', weight: 1, fillColor: '#fff', fillOpacity: 1 })
+      .addTo(map)
+      .bindPopup('<strong>' + title + '</strong><br>' + note);
+  }
+
+  pin(edouard, 'Édouard-Montpetit REM', 'Start / end by train');
+  pin(brossard, 'Brossard REM', 'Bike on / off');
+  pin(chambly, 'Chambly', 'Canal path · coffee stop');
+  pin(stJean, 'Saint-Jean-sur-Richelieu', 'Montérégiade starts');
+  pin(farnham, 'Farnham', 'Lunch · Magenta detour');
+  pin(granby, 'Granby', 'Night 2 · Estriade hub');
+  pin(bromont, 'Bromont', 'Night 1');
+  pin(waterloo, 'Waterloo', 'Day 2 turnaround zone');
+  pin(eastman, 'Eastman', 'Optional short Montagnarde taste');
+
+  map.fitBounds(L.latLngBounds([edouard, brossard, chambly, stJean, farnham, granby, bromont, waterloo, eastman]).pad(0.08));
+})();
+</script>
+</body>
+</html>
